@@ -86,7 +86,7 @@ A professional photographer portfolio WeChat Mini Program built with OpenAI Code
 ## Upload & Edit
 
 ![Management1](screenshots/management.png)
-![Management2](screenshots/management_1.png)
+![Management2](screenshots/management1.png)
 
 
 ---

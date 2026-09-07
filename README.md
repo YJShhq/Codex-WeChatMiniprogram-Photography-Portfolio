@@ -81,12 +81,12 @@ A professional photographer portfolio WeChat Mini Program built with OpenAI Code
 
 ## Portfolio Display
 
-![Portfolio](screenshots/Portfolio_Showcase.png)
-
+![Portfolio1](screenshots/Portfolio_Showcase.png)
+![Portfolio2](screenshots/Portfolio_Showcase_1.png)
 ## Upload & Edit
 
-![Management](screenshots/management.png)
-![Management](screenshots/management_1.png)
+![Management1](screenshots/management.png)
+![Management2](screenshots/management_1.png)
 
 
 ---

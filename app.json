@@ -1,0 +1,12 @@
+{
+  "pages": ["pages/index/index", "pages/detail/detail", "pages/admin/admin", "pages/about/about"],
+  "window": {
+    "navigationBarTitleText": "成木汤汤 · 摄影作品集",
+    "navigationBarBackgroundColor": "#f2f0e9",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f2f0e9"
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

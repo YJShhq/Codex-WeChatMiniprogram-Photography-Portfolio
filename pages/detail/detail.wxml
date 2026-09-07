@@ -1,0 +1,21 @@
+<view class="detail-page">
+  <view wx:if="{{loading}}" class="loading">正在加载作品集…</view>
+  <block wx:else>
+    <view class="album-stage" style="height:{{stageHeight}}px">
+      <swiper class="album-swiper" style="height:{{stageHeight}}px" current="{{current}}" bindchange="changeSlide" duration="320" circular="{{images.length > 1}}" easing-function="easeOutCubic">
+        <swiper-item wx:for="{{images}}" wx:key="*this">
+          <view class="slide" bindtap="preview"><image src="{{item}}" mode="widthFix" style="width:100%;height:auto;display:block"/></view>
+        </swiper-item>
+      </swiper>
+      <view wx:if="{{images.length > 1}}" class="counter">{{current + 1}} / {{images.length}}</view>
+      <view wx:if="{{images.length > 1}}" class="swipe-hint">‹　左右滑动查看全部照片　›</view>
+    </view>
+    <view class="copy">
+      <text class="en">{{work.subtitle}}</text><view class="title">{{work.title}}</view><text class="category">{{work.category}}</text>
+      <view class="note">{{work.note}}</view><view class="line"></view>
+      <view class="album-info"><text>{{images.length}} 张照片</text><text bindtap="preview">查看全屏　↗</text></view>
+      <button class="share-button" open-type="share">分享给微信好友　↗</button>
+      <button bindtap="contact">预约同类拍摄　→</button>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,4 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": { "service-gallery": "/components/service-gallery/service-gallery" }
+}

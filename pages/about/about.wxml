@@ -1,0 +1,1 @@
+<view class="about"><text class="eyebrow">ABOUT CHENGMU TANGTANG</text><view class="title">照片不是答案，\n而是与时间相处的方式。</view><view class="intro">成木汤汤喜欢自然光、真实互动和不被安排的片刻。每一次拍摄都从观察开始，让人物和空间保留原本的呼吸感。</view><button bindtap="copyWechat">复制微信 · Huloubo31</button></view>

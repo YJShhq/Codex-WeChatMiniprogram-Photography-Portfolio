@@ -1,0 +1,157 @@
+<view class="admin-page">
+  <view wx:if="{{checking}}" class="loading-card">
+    <view class="loading-dot"></view><text>正在验证管理权限</text>
+  </view>
+
+  <view wx:elif="{{!isAdmin}}" class="setup-card">
+    <text class="eyebrow">ADMIN SETUP</text>
+    <view class="page-title">绑定摄影师身份</view>
+    <view class="description">复制下方 OpenID，在云数据库的 admins 集合中添加记录：字段名为 openid，类型为字符串。</view>
+    <view class="openid-box">{{openid}}</view>
+    <button class="primary-button" bindtap="copyOpenId">复制 OpenID</button>
+    <view class="muted">添加完成后，请重新进入本页面。</view>
+  </view>
+
+  <block wx:else>
+    <view class="intro-card">
+      <text class="eyebrow">PORTFOLIO MANAGER</text>
+      <view class="page-title">发布新的故事</view>
+      <view class="description">从相册选择客片，填写作品信息后即可发布到小程序。</view>
+    </view>
+
+    <view class="hero-manager">
+      <view class="hero-manager-head"><view><text class="eyebrow">HOMEPAGE COVERS</text><view class="section-title">首页轮播封面</view></view><text>{{heroImages.length}}/12 张</text></view>
+      <view class="description">上传多张图片后，首页顶部会按照当前顺序自动循环展示。</view>
+      <view wx:if="{{heroImages.length}}" class="hero-manager-grid">
+        <view class="hero-manager-image" wx:for="{{heroImages}}" wx:key="fileID">
+          <image src="{{item.url || item.fileID}}" mode="aspectFill"/>
+          <text class="hero-number">{{index + 1}}</text>
+          <text class="hero-remove" bindtap="removeHeroImage" data-index="{{index}}">×</text>
+        </view>
+      </view>
+      <view wx:if="{{heroProgress}}" class="hero-progress">{{heroProgress}}</view>
+      <button class="hero-upload" bindtap="addHeroImages" loading="{{heroSaving}}" disabled="{{heroSaving || heroImages.length >= 12}}">{{heroImages.length ? '继续上传封面' : '上传首页封面'}}</button>
+    </view>
+
+    <view class="form-card">
+      <view class="step-heading"><text>01</text><view><text style="font-size:28rpx;font-weight:600">选择作品分类</text><text style="font-size:20rpx;color:#9b928b">选择照片所属的拍摄服务</text></view></view>
+      <picker range="{{categories}}" value="{{categoryIndex}}" bindchange="chooseCategory">
+        <view class="select-field"><text>{{categories[categoryIndex]}}</text><text class="chevron">⌄</text></view>
+      </picker>
+      <view class="destination-field">
+        <label>展示板块</label>
+        <picker range="{{sectionOptions}}" value="{{sectionIndex}}" bindchange="chooseSection">
+          <view class="select-field"><text>{{sectionOptions[sectionIndex]}}</text><text class="chevron">⌄</text></view>
+        </picker>
+        <text>服务与客片内容相互独立，也可以选择同时展示。</text>
+      </view>
+
+      <view class="step-heading second"><text>02</text><view><text style="font-size:28rpx;font-weight:600">填写作品信息</text><text style="font-size:20rpx;color:#9b928b">未填写时将使用默认文案</text></view></view>
+      <view class="field-group">
+        <label>作品标题 <text>选填</text></label>
+        <input class="text-input" placeholder="例如：领证日 · 初夏" placeholder-class="placeholder" value="{{title}}" bindinput="inputTitle" maxlength="40"/>
+      </view>
+      <view class="field-group">
+        <label>作品说明 <text>选填</text></label>
+        <textarea class="text-area" placeholder="写下这一组照片背后的故事……" placeholder-class="placeholder" value="{{note}}" bindinput="inputNote" maxlength="160"/>
+      </view>
+
+      <view class="step-heading second"><text>03</text><view><text style="font-size:28rpx;font-weight:600">添加客片</text><text style="font-size:20rpx;color:#9b928b">每次可选 9 张，单个作品最多 30 张</text></view></view>
+      <button class="choose-button" bindtap="chooseImages"><text class="plus">＋</text><text>{{selected.length ? '继续添加照片（' + selected.length + '/30）' : '从相册选择照片'}}</text></button>
+      <view wx:if="{{selected.length}}" class="selection-summary">已选择 {{selected.length}} 张 · 点击图片右上角可移除</view>
+      <view class="selected-grid">
+        <view wx:for="{{selected}}" wx:key="path" class="photo-thumb" style="height:auto;min-height:0;overflow:visible">
+          <image src="{{item.path}}" mode="widthFix" style="width:100%;height:auto;display:block"/>
+          <text class="remove" bindtap="removeSelected" data-index="{{index}}">×</text>
+          <text class="number">{{index + 1}}</text>
+        </view>
+      </view>
+
+      <button class="publish-button" bindtap="uploadAll" loading="{{uploading}}" disabled="{{uploading}}">{{progress || '压缩并发布作品'}}</button>
+      <view class="upload-tip"><text>i</text><view>照片会在手机端压缩后上传至云存储，不占用小程序代码包。建议将原片保留在电脑或专业网盘中。</view></view>
+    </view>
+
+    <view class="list-card">
+      <view class="list-head"><view><text class="eyebrow">PUBLISHED WORKS</text><view class="section-title">已上传作品</view></view><text class="count">{{works.length}} 组</text></view>
+      <view class="works-sort-manager">
+        <view class="sort-manager-head"><view><text>作品展示排序</text><text>选择分类后，拖动作品调整前台展示顺序</text></view><text>{{sortWorks.length}} 组</text></view>
+        <picker range="{{sortCategories}}" value="{{sortCategoryIndex}}" bindchange="chooseSortCategory" disabled="{{sortSaving}}">
+          <view class="sort-category-select"><text>{{sortCategories[sortCategoryIndex]}}</text><text>切换分类　⌄</text></view>
+        </picker>
+        <view wx:if="{{sortWorks.length}}" class="sort-work-list">
+          <view class="sort-work-item {{index === draggingWorkIndex ? 'dragging' : ''}} {{index === dragWorkTargetIndex && index !== draggingWorkIndex ? 'drag-target' : ''}}" wx:for="{{sortWorks}}" wx:for-item="sortWork" wx:key="_id">
+            <text class="sort-position">{{index + 1}}</text>
+            <image src="{{sortWork.thumbnailURL || sortWork.thumbnailFileID}}" mode="aspectFill"/>
+            <view class="sort-work-copy"><text>{{sortWork.title}}</text><text>{{index === 0 ? '首位 · ' : ''}}{{sortWork.category}} · {{sortWork.sectionLabel}}</text></view>
+            <view class="sort-drag-handle" data-index="{{index}}" catchtouchstart="beginWorkDrag" catchtouchmove="moveWorkDrag" catchtouchend="endWorkDrag" catchtouchcancel="cancelWorkDrag"><text>☰</text><text>拖动</text></view>
+          </view>
+        </view>
+        <view wx:else class="sort-empty">该分类暂时没有作品</view>
+        <view wx:if="{{draggingWorkIndex >= 0}}" class="work-drag-ghost" style="top:{{dragWorkY}}px">{{dragWorkTitle}}</view>
+        <button class="save-works-order" bindtap="saveWorksOrder" loading="{{sortSaving}}" disabled="{{sortSaving || !sortDirty || !sortWorks.length}}">{{sortDirty ? '保存当前分类顺序' : '当前顺序已保存'}}</button>
+      </view>
+      <view wx:if="{{!works.length}}" class="empty"><view>暂时还没有云端作品</view><text>发布第一组照片后，它会出现在这里。</text></view>
+      <view class="work-entry" wx:for="{{works}}" wx:key="_id">
+        <view class="work-row">
+          <image src="{{item.thumbnailURL || item.thumbnailFileID}}" mode="aspectFill"/>
+          <view class="work-info"><text class="category">{{item.category}} · {{item.sectionLabel}}</text><view>{{item.title}}</view><text class="status {{item.published ? 'online' : ''}}">{{item.imageFileIDs ? item.imageFileIDs.length : 1}} 张 · {{item.published ? '● 展示中' : '○ 已下架'}}</text></view>
+          <view class="row-actions"><button class="edit" bindtap="editImages" data-item="{{item}}">{{editingId === item._id ? '收起' : '编辑'}}</button><button bindtap="toggle" data-item="{{item}}">{{item.published ? '下架' : '上架'}}</button><button class="delete" bindtap="remove" data-item="{{item}}">删除</button></view>
+        </view>
+        <button wx:if="{{item.published}}" class="share-link" open-type="share" data-item="{{item}}">分享好友　↗</button>
+        <view wx:else class="share-link disabled">上架后可分享</view>
+        <view wx:if="{{editingId === item._id}}" class="image-editor">
+          <view class="metadata-editor">
+            <view class="metadata-title"><text>编辑作品资料</text><text>分类保存后会同步调整前台归属</text></view>
+            <view class="edit-field">
+              <label>作品分类</label>
+              <picker range="{{categories}}" value="{{editCategoryIndex}}" bindchange="chooseEditCategory" disabled="{{editSaving}}">
+                <view class="edit-select"><text>{{categories[editCategoryIndex]}}</text><text>⌄</text></view>
+              </picker>
+            </view>
+            <view class="edit-field">
+              <label>展示板块</label>
+              <picker range="{{sectionOptions}}" value="{{editSectionIndex}}" bindchange="chooseEditSection" disabled="{{editSaving}}">
+                <view class="edit-select"><text>{{sectionOptions[editSectionIndex]}}</text><text>⌄</text></view>
+              </picker>
+            </view>
+            <view class="edit-field">
+              <label>作品标题</label>
+              <input value="{{editTitle}}" bindinput="inputEditTitle" maxlength="40" disabled="{{editSaving}}" placeholder="填写作品标题"/>
+            </view>
+            <view class="edit-field">
+              <label>英文副标题 <text>选填</text></label>
+              <input value="{{editSubtitle}}" bindinput="inputEditSubtitle" maxlength="60" disabled="{{editSaving}}" placeholder="留空将根据分类自动生成"/>
+            </view>
+            <view class="edit-field">
+              <label>作品介绍 <text>选填</text></label>
+              <textarea value="{{editNote}}" bindinput="inputEditNote" maxlength="200" disabled="{{editSaving}}" placeholder="填写这一组作品的介绍……"/>
+            </view>
+            <button class="save-metadata" bindtap="saveEditedMetadata" loading="{{editSaving && editProgress === '正在保存作品资料'}}" disabled="{{editSaving}}">保存作品资料</button>
+          </view>
+          <view class="editor-head"><view><text>编辑作品图片</text><text class="editor-tip">按住“拖动排序”移动图片，第一张将作为作品封面</text></view><text>{{editImages.length}}/30 张</text></view>
+          <view class="editor-grid">
+            <view class="editor-image {{image.selected ? 'selected' : ''}} {{index === draggingIndex ? 'dragging' : ''}} {{index === dragTargetIndex && index !== draggingIndex ? 'drag-target' : ''}}" wx:for="{{editImages}}" wx:for-item="image" wx:key="fileID" bindtap="toggleEditImage" data-index="{{index}}">
+              <view class="editor-photo">
+                <image src="{{image.url || image.fileID}}" mode="aspectFill"/>
+                <text class="select-mark">{{image.selected ? '✓' : ''}}</text>
+                <text class="image-order">{{index + 1}}{{index === 0 ? ' · 封面' : ''}}</text>
+              </view>
+              <view class="image-actions">
+                <view class="drag-handle" data-index="{{index}}" catchtouchstart="beginImageDrag" catchtouchmove="moveImageDrag" catchtouchend="endImageDrag" catchtouchcancel="cancelImageDrag"><text>☰</text>拖动排序</view>
+                <button catchtap="replaceEditImage" data-index="{{index}}" disabled="{{editSaving}}">替换</button>
+              </view>
+            </view>
+          </view>
+          <image wx:if="{{draggingIndex >= 0}}" class="image-drag-ghost" src="{{dragImageUrl}}" mode="aspectFill" style="left:{{dragX}}px;top:{{dragY}}px"/>
+          <view wx:if="{{editProgress}}" class="edit-progress">{{editProgress}}</view>
+          <button class="save-order" bindtap="saveImageOrder" loading="{{editSaving && editOrderDirty}}" disabled="{{editSaving || !editOrderDirty}}">{{editOrderDirty ? '保存图片顺序' : '图片顺序已保存'}}</button>
+          <view class="editor-actions">
+            <button bindtap="selectAllEditImages" disabled="{{editSaving}}">全选/取消</button>
+            <button class="add" bindtap="addEditImages" disabled="{{editSaving || editImages.length >= 30}}">上传图片</button>
+            <button class="batch-delete" bindtap="deleteSelectedImages" disabled="{{editSaving}}">删除选中</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

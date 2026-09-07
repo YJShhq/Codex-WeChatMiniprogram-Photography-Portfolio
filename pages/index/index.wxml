@@ -1,0 +1,80 @@
+<view class="page">
+  <view class="topbar">
+    <text class="brand-title">CMTT成木汤汤摄影</text>
+  </view>
+
+  <block wx:if="{{currentTab === 'home'}}">
+    <view class="hero-collage">
+      <swiper class="hero-swiper" current="{{heroCurrent}}" autoplay="{{heroImages.length > 1}}" circular="{{heroImages.length > 1}}" interval="3500" duration="650" bindchange="changeHero">
+        <swiper-item wx:for="{{heroImages}}" wx:key="*this">
+          <image src="{{item}}" mode="aspectFill"/>
+        </swiper-item>
+      </swiper>
+      <view class="hero-tag"><view>CHENGMU</view><view>TANGTANG</view></view>
+      <view class="hero-pagination">
+        <view class="hero-progress-track">
+          <view wx:for="{{heroImages}}" wx:key="*this" class="hero-progress-segment {{index === heroCurrent ? 'active' : ''}}"></view>
+        </view>
+        <text>{{heroCurrent + 1}} / {{heroImages.length}}</text>
+      </view>
+    </view>
+    <view class="home-intro">
+      <view class="ornament">✦</view>
+      <view class="script">Chengmu Tangtang</view>
+      <view class="studio-name">成木汤汤摄影</view>
+      <view class="motto"><view>不生产“标准美人”</view><view>只拍下你独一无二的样子</view></view>
+      <view class="promise"><view>陪你找到镜头前最舒服的状态</view><view>不辜负每一份信任与期待</view></view>
+      <button class="outline-btn" bindtap="switchTab" data-key="service">探索拍摄服务　→</button>
+    </view>
+    <view class="featured">
+      <text class="kicker">SELECTED STORIES</text>
+      <view class="section-title">近期故事</view>
+      <scroll-view scroll-x class="story-scroll">
+        <view class="story-card" wx:for="{{guestWorks}}" wx:key="id" bindtap="openWork" data-id="{{item.id}}">
+          <image src="{{item.src}}" mode="widthFix" style="width:100%;height:auto;display:block"/><text>{{item.category}}</text><view>{{item.title}}</view>
+        </view>
+      </scroll-view>
+    </view>
+  </block>
+
+  <block wx:elif="{{currentTab === 'service'}}">
+    <service-gallery works="{{serviceWorks}}" categories="{{serviceCategories}}" bind:openwork="openWork"/>
+  </block>
+
+  <block wx:elif="{{currentTab === 'works'}}">
+    <view class="section works-page">
+      <text class="kicker">REAL PEOPLE · REAL MOMENTS</text><view class="section-title">客片故事</view>
+      <scroll-view class="works-category-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+        <view class="works-category-list">
+          <view wx:for="{{serviceCategories}}" wx:key="*this" class="works-category-chip {{worksCategory === item ? 'active' : ''}}" data-category="{{item}}" bindtap="selectWorksCategory">{{item}}</view>
+        </view>
+      </scroll-view>
+      <view class="works-grid">
+        <view class="work-tile" wx:for="{{displayedWorks}}" wx:key="id" bindtap="openWork" data-id="{{item.id}}">
+          <image src="{{item.src}}" mode="widthFix" style="width:100%;height:auto;display:block"/><text>{{item.category}}</text><view>{{item.title}}</view>
+        </view>
+      </view>
+      <view wx:if="{{!displayedWorks.length}}" class="works-category-empty">该分类暂时还没有客片故事</view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view class="contact-hero">
+      <view class="contact-mark"><text>成</text></view>
+      <view class="section-title">很高兴认识你</view>
+      <view class="intro-text">告诉我你想记录的故事、期望日期与所在城市，我会认真回复每一份拍摄邀请。</view>
+    </view>
+    <view class="contact-card">
+      <text class="legend">联系方式 / CONTACT</text>
+      <label>摄影师</label><view>成木汤汤</view>
+      <label>微信</label><view class="copy-row"><text>Huloubo31</text><button bindtap="copyWechat">复制</button></view>
+      <label>服务内容</label><view><view>领证跟拍 · 婚礼跟拍 · 答谢宴</view><view>拍立得 · 私人定制少女写真 · 个人纪实</view></view>
+      <button class="primary-btn" bindtap="previewWechat">预约拍摄</button>
+    </view>
+    <view class="contact-note"><view>CHENGMU TANGTANG</view><text>不定义你，只记录你。</text><button class="admin-entry" bindtap="openAdmin">作品管理</button></view>
+  </block>
+
+  <view class="custom-tabbar">
+    <view wx:for="{{tabs}}" wx:key="key" class="tab {{currentTab === item.key ? 'active' : ''}}" bindtap="switchTab" data-key="{{item.key}}"><text class="tab-icon">{{item.icon}}</text><text>{{item.label}}</text></view>
+  </view>
+</view>

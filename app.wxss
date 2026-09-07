@@ -1,0 +1,3 @@
+page { background:#f2f0e9; color:#171713; font-family:"Songti SC",serif; }
+button::after { border:0; }
+.eyebrow { font-family:Arial,sans-serif; font-size:18rpx; letter-spacing:5rpx; }

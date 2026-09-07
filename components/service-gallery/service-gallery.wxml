@@ -1,0 +1,18 @@
+<view class="service-browser">
+  <view class="category-rail">
+    <view wx:for="{{categories}}" wx:key="*this" class="category-item {{selected === item ? 'active' : ''}}" data-name="{{item}}" bindtap="selectCategory">
+      <text>{{item}}</text><view class="active-line"></view>
+    </view>
+  </view>
+  <scroll-view class="gallery-panel" scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="gallery-head"><text>CHENGMU TANGTANG</text><view>{{selected}}</view><text style="display:block;font-size:15rpx;color:#aaa19a;letter-spacing:2rpx">{{filtered.length}} STORIES</text></view>
+    <view wx:if="{{filtered.length}}" class="masonry-grid">
+      <view class="portfolio-card" wx:for="{{filtered}}" wx:key="id" data-id="{{item._id || item.id}}" bindtap="open">
+        <image src="{{item.thumbnailURL || item.thumbnailFileID || item.src}}" mode="widthFix" style="width:100%;height:auto;display:block" lazy-load/>
+        <text>{{item.category}}</text><view>{{item.title}}</view>
+      </view>
+    </view>
+    <view wx:else class="empty-state"><view class="empty-mark">○</view><text style="display:block;font-size:26rpx;font-weight:500">这一页正在等待新的故事</text><text>上传 {{selected}} 作品后，会自动展示在这里。</text></view>
+    <view class="bottom-space"></view>
+  </scroll-view>
+</view>

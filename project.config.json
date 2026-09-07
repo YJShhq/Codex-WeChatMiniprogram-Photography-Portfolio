@@ -1,0 +1,48 @@
+{
+  "description": "独立摄影师作品集微信小程序",
+  "packOptions": {
+    "ignore": [
+      { "type": "folder", "value": "web-preview" },
+      { "type": "file", "value": "1f1fdd21219bcf98eab1efe3c774f34f.jpg" },
+      { "type": "file", "value": "32b9c1dac6658be3300a20999fee9d02.jpg" },
+      { "type": "file", "value": "b5d6085c8f1d9875394c8f422eecdac6.jpg" },
+      { "type": "file", "value": "e054dbfe3bfb5228d1a341098cd5076b.jpg" }
+      ,{ "type": "file", "value": "作品更新说明.md" }
+      ,{ "type": "file", "value": "压缩并导入图片.ps1" }
+      ,{ "type": "folder", "value": "待处理图片" }
+    ],
+    "include": []
+  },
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "enhance": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
+  },
+  "compileType": "miniprogram",
+  "appid": "wx235842505a4fed89",
+  "projectname": "chengmu-tangtang-portfolio",
+  "miniprogramRoot": "./",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "simulatorPluginLibVersion": {},
+  "editorSetting": {}
+}

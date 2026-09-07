@@ -1,0 +1,1 @@
+{ "desc": "作品集页面均可被索引", "rules": [{ "action": "allow", "page": "*" }] }

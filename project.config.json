@@ -39,7 +39,7 @@
     }
   },
   "compileType": "miniprogram",
-  "appid": "wx235842505a4fed89",
+  "appid": "your_appid",
   "projectname": "chengmu-tangtang-portfolio",
   "miniprogramRoot": "./",
   "cloudfunctionRoot": "cloudfunctions/",
